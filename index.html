@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circle Packing Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    label { display: block; margin: 10px 0 5px; }
+    input { width: 100%; padding: 8px; margin-bottom: 10px; }
+    button { padding: 10px 15px; font-size: 16px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Circle Packing Calculator</h1>
+  <label for="width">Rectangle Width (x):</label>
+  <input id="width" type="number" placeholder="Enter width (e.g. 300)" />
+  <label for="height">Rectangle Height (y):</label>
+  <input id="height" type="number" placeholder="Enter height (e.g. 1000)" />
+  <label for="diameter">Circle Diameter (r):</label>
+  <input id="diameter" type="number" placeholder="Enter diameter (e.g. 80)" />
+  <button onclick="calculatePacking()">Calculate</button>
+  <div id="result"></div>
+
+  <script>
+    function calculatePacking() {
+      const x = parseFloat(document.getElementById('width').value);
+      const y = parseFloat(document.getElementById('height').value);
+      const D = parseFloat(document.getElementById('diameter').value);
+      if (!x || !y || !D) {
+        alert('Please fill in all fields with positive numbers.');
+        return;
+      }
+      // square grid count
+      const n_sq = Math.floor(x/D) * Math.floor(y/D);
+      // hexagonal grid helper
+      function hexCount(w, h) {
+        const n1 = Math.floor(w/D);
+        const n2 = Math.floor((w - D/2) / D);
+        const m = Math.floor(1 + (h - D) / (Math.sqrt(3)/2 * D));
+        return Math.ceil(m/2) * n1 + Math.floor(m/2) * n2;
+      }
+      const n_hex1 = hexCount(x, y);
+      const n_hex2 = hexCount(y, x);
+      const n_hex = Math.max(n_hex1, n_hex2);
+      const result = Math.max(n_sq, n_hex);
+      document.getElementById('result').textContent = `Maximum circles: ${result}`;
+    }
+  </script>
+</body>
+</html>
